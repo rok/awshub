@@ -1,0 +1,12 @@
+---
+
+- name: Create passwords for given usernames
+  set_fact: users="{{users}}+[{ 'username':'{{ item }}','pwd':'{{ lookup('password', 'passwords/{{ item }}.txt length=8 chars=ascii_letters,digits,hexdigits') }}' }]"
+  with_items:
+    - "{{ jupyterhub_users }}"
+
+- name: Store usernames and passwords into a yaml file
+  copy: content={{ {'users':users} | to_nice_yaml }} dest=./userlist.yaml
+
+- name: Store usernames and passwords into a printable html file
+  template: src=userlist.html.j2 dest=./userlist.html

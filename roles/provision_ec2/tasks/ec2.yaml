@@ -1,0 +1,30 @@
+---
+
+- name: Create ec2 instance
+  ec2:
+    key_name: "{{ project }}"
+    image: "{{ image }}"
+    instance_type: "{{ instances_type }}"
+    region: "{{ region }}"
+    termination_protection: no
+    assign_public_ip: yes
+    group_id: "{{ vpc_sg.group_id }}"
+    vpc_subnet_id: "{{ vpc.subnets[0].id}}"
+    volumes:
+      - device_name: "{{ instances_device_name }}"
+        volume_size: "{{ instances_data_size }}"
+        delete_on_termination: yes
+
+    exact_count: "{{ instances_count }}"
+    instance_tags:
+      Name: "{{ project }}"
+      Project: "{{ project }}"
+    count_tag:
+      Name: "{{ project }}"
+      Project: "{{ project }}"
+    wait: yes
+  register: ec2
+
+- name: Wait for SSH to come up
+  wait_for: host={{ item.public_dns_name }} port=22 delay=20 timeout=320 state=started
+  with_items: "{{ ec2.instances }}"

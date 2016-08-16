@@ -1,0 +1,69 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Provision an EC2 instance
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  roles:
+    - provision_ec2
+    - userlist
+
+  post_tasks:
+    - name: Refresh EC2 inventory
+      shell: inventory/ec2.py --refresh-cache
+    - meta: refresh_inventory
+
+- name: Install and configure jupyterhub on it.
+  hosts: "tag_Project_{{ project }}:&tag_Name_{{ project }}"
+  connection: ssh
+  user: ubuntu
+  become: yes
+  gather_facts: no
+  vars_files:
+    - "group_vars/all/all.yaml"
+
+  pre_tasks:
+    - name: 'Install python'
+      raw: sudo apt-get install -y python
+
+    - include_vars: "./userlist.yaml"
+
+    - name: Add users to the server
+      user: name="{{ item.username }}" password="{{ item.pwd | password_hash('sha512') }}"
+      with_items: "{{ users }}"
+
+  roles:
+    - { role: cloudflare,
+        when: cloudflare_token is defined and cloudflare_email is defined }
+    - common
+    - python
+    - supervisor
+    - jupyterhub
+    - nginx
+
+
+# Close port 80
+- name: Provision an EC2 instance
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Create ec2 security group
+      ec2_group:
+        name: "{{ sg_name }}"
+        description: "{{ project }} security group"
+        region: "{{ region }}"
+        vpc_id: "{{ vpc.vpc.id }}"
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            from_port: 443
+            to_port: 443
+            cidr_ip: 0.0.0.0/0
+          - proto: all
+            cidr_ip: "{{ vpc_cidr_block }}"

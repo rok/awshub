@@ -1,0 +1,15 @@
+<html>
+<body>
+{% if users|length %}
+
+{%- for user in users -%}
+<div> Some course info. <br /> {{ domain }}</div>
+<p>
+{{user.username}} <br />
+{{user.pwd}} <br />
+</p>
+{%- endfor -%}
+
+{% endif %}
+</body>
+</html>

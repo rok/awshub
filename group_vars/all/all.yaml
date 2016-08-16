@@ -1,0 +1,79 @@
+---
+project: jupyterhub
+region: eu-west-1
+keyfile: ~/.ssh/id_rsa.pub
+
+# EC2
+image: ami-0ae77879 # ubuntu trusty 16.04 (ami-26e70c49 @ eu-central-1)
+instances_count: 1 # count per one subnet
+instances_type: m4.4xlarge # t2.micro
+ansible_processor_count: 16
+instances_data_size: 10
+instances_device_name: /dev/sda1
+
+# Letsencrypt
+use_letsencrypt: yes
+letsencrypt_email: rok@mihevc.org
+domain: youstar.org
+
+# The base directory of user accounts
+home_dir: /home
+
+# VPC
+vpc_name: "{{ project }}-vpc"
+vpc_cidr_block: 172.22.0.0/16
+vpc_subnets:
+  - cidr: 172.22.1.0/24 
+    az: "{{ region }}a"
+    resource_tags: { "Name": "{{ project }}" }
+sg_name: "{{ project }}-security-group"
+
+conda_prefix: /opt/conda
+
+# The users that should be jupyterhub admins
+jupyterhub_admin_users:
+  - admin
+
+# The regular users able to use jupyterhub
+jupyterhub_users:
+  - admin
+  - user_01
+  - user_02
+  - user_03
+  - user_04
+  - user_05
+  - user_06
+  - user_07
+  - user_08
+  - user_09
+  - user_10
+  - user_11
+  - user_12
+  - user_13
+  - user_14
+  - user_15
+  - user_16
+  - user_17
+  - user_18
+  - user_19
+  - user_20
+  - user_21
+  - user_22
+  - user_23
+  - user_24
+  - user_25
+  - user_26
+  - user_27
+  - user_28
+  - user_29
+  - user_30
+  - user_31
+  - user_32
+  - user_33
+  - user_34
+  - user_35
+  - user_36
+  - user_37
+  - user_38
+  - user_39
+  - user_40

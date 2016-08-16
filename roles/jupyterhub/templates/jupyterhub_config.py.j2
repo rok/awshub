@@ -1,0 +1,52 @@
+# {{ ansible_managed }}
+# Configuration file for jupyterhub.
+
+c = get_config()
+c.JupyterHub.ip = u'127.0.0.1'
+c.JupyterHub.port = 8000
+
+c.JupyterHub.cookie_secret_file = u'{{ jupyterhub_srv_dir }}/cookie_secret'
+c.JupyterHub.db_url = u'{{ jupyterhub_srv_dir }}/jupyterhub.sqlite'
+c.JupyterHub.proxy_auth_token = u'{{ proxy_auth_token }}'
+c.JupyterHub.confirm_no_ssl = True
+
+{% if use_oauth %}
+c.JupyterHub.authenticator_class = u'oauthenticator.LocalGitHubOAuthenticator'
+c.LocalGitHubOAuthenticator.create_system_users = True
+c.Authenticator.add_user_cmd =  ['adduser', '-q', '--home', '{{home_dir}}/USERNAME', '--gecos', '""', '--disabled-password']
+c.GitHubOAuthenticator.oauth_callback_url = u'{{ oauth_callback_url }}'
+c.GitHubOAuthenticator.client_id = u'{{ oauth_client_id }}'
+c.GitHubOAuthenticator.client_secret = u'{{ oauth_client_secret }}'
+{% endif %}
+
+{% if jupyterhub_admin_users|length %}
+c.Authenticator.admin_users = {
+{%- for user in jupyterhub_admin_users[:-1] -%}
+'{{user}}',
+{%- endfor -%}
+'{{-jupyterhub_admin_users[-1]-}}'}
+{% else %}
+c.Authenticator.admin_users = set()
+{% endif %}
+
+{% if jupyterhub_users|length %}
+c.Authenticator.whitelist = {
+{%- for user in jupyterhub_users[:-1] -%}
+'{{user}}',
+{%- endfor -%}
+'{{-jupyterhub_users[-1]-}}'}
+{% else %}
+c.Authenticator.whitelist = set()
+{% endif %}
+
+c.JupyterHub.api_tokens = {}
+{% if formgrader_hubapi_token %}
+c.JupyterHub.api_tokens.update({
+    '{{formgrader_hubapi_token}}': '{{nbgrader_owner}}'
+})
+{% endif %}
+{% if cull_idle_servers_hubapi_token %}
+c.JupyterHub.api_tokens.update({
+    '{{cull_idle_servers_hubapi_token}}': '{{cull_idle_servers_owner}}'
+})
+{% endif %}

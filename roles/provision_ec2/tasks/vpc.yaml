@@ -1,0 +1,15 @@
+---
+- name: Create VPC
+  ec2_vpc:
+    state: present
+    cidr_block: "{{ vpc_cidr_block }}"
+    resource_tags: { "Name": "{{ vpc_name }}" }
+    subnets: "{{ vpc_subnets }}"
+    internet_gateway: True
+    route_tables:
+      - subnets: "{{ vpc_subnets|map(attribute='cidr')|list }}"
+        routes:
+          - dest: 0.0.0.0/0
+            gw: igw
+    region: "{{ region }}"
+  register: vpc

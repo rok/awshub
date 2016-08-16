@@ -1,0 +1,47 @@
+---
+
+# These are global variables that are used across roles.
+# You shouldn't have to change these, to customize this deployment
+# for individual hosts, create and edit files in the host_vars folder.
+
+# ---------------------------------------------------
+# JupyterHub config
+# ---------------------------------------------------
+
+jupyterhub_srv_dir: /srv/jupyterhub
+jupyterhub_config_dir: /etc/jupyterhub
+jupyterhub_log_dir: /var/log/jupyterhub
+
+# ---------------------------------------------------
+# Jupyter config
+# ---------------------------------------------------
+
+jupyter_config_dir: /etc/jupyter
+jupyter_share_dir: /usr/local/share/jupyter
+jupyter_templates_dir: "{{jupyter_config_dir}}/templates"
+
+# ---------------------------------------------------
+# IPython config
+# ---------------------------------------------------
+
+ipython_config_dir: /etc/ipython
+
+# ---------------------------------------------------
+# Nginx
+# ---------------------------------------------------
+
+# For externally provided SSL cert
+ssl_path: "/etc/nginx/ssl"
+ssl_key_path: "{{ssl_path}}/ssl.key"
+ssl_cert_path: "{{ssl_path}}/ssl.crt"
+
+# If letsencrypt is used to get SSL cert
+letsencrypt_ssl_key_path: "/etc/letsencrypt/live/{{ domain }}/privkey.pem"
+letsencrypt_ssl_cert_path: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+
+# ---------------------------------------------------
+# Nbgrader config
+# ---------------------------------------------------
+
+nbgrader_log_dir: /var/log/nbgrader
+nbgrader_exchange_dir: /srv/nbgrader/exchange
