@@ -1,4 +1,5 @@
 *.retry
+cookie_secret
 passwords
 userlist.html
 userlist.yaml
