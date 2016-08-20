@@ -5,8 +5,12 @@
   with_items:
     - "{{ jupyterhub_users }}"
 
-- name: Store usernames and passwords into a yaml file
-  copy: content={{ {'users':users} | to_nice_yaml }} dest=./userlist.yaml
+- name: Store usernames and passwords into a yml file
+  copy:
+    content: "{{ {'users':users} | to_nice_yaml }}"
+    dest: ./userlist.yml
 
 - name: Store usernames and passwords into a printable html file
-  template: src=userlist.html.j2 dest=./userlist.html
+  template:
+    src: userlist.html.j2
+    dest: ./userlist.html

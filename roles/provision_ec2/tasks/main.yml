@@ -1,0 +1,6 @@
+---
+
+- include: key.yml
+- include: vpc.yml
+- include: sg.yml
+- include: ec2.yml

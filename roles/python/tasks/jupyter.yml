@@ -1,6 +1,10 @@
 ---
+
 - name: conda install ipython/jupyter deps
-  conda: name={{item}} state=present executable="{{conda_prefix}}/bin/conda"
+  conda:
+    name: {{item}}
+    state: present
+    executable: "{{conda_prefix}}/bin/conda"
   become: yes
   with_items:
     - notebook==4.2
@@ -9,10 +13,14 @@
     - nbconvert
 
 - name: install pandoc
-  apt: pkg=pandoc state=present
+  apt:
+    pkg: pandoc
+    state: present
 
 - name: pip install non-conda deps
-  pip: name={{item}} state=present
+  pip:
+    name: {{item}}
+    state: present
   environment:
     PATH: "{{conda_prefix}}/bin:{{ (ansible_env|default({})).PATH|default('') }}"
   become: yes

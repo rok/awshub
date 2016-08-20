@@ -1,0 +1,28 @@
+---
+
+- name: install supervisor config for jupyterhub
+  become: true
+  template:
+    src: jupyterhub.conf.j2
+    dest: /etc/supervisor/conf.d/jupyterhub.conf
+    owner: root
+    group: root
+    mode: 0600
+    backup: yes
+
+- name: install jupyterhub launch script
+  become: true
+  template:
+    src: start-jupyterhub.sh.j2
+    dest: {{jupyterhub_srv_dir}}/start-jupyterhub.sh
+    mode: 0700
+
+- name: load jupyterhub supervisor config
+  supervisorctl:
+    name: jupyterhub
+    state: present
+
+- name: restart jupyterhub with supervisor
+  supervisorctl:
+    name: jupyterhub
+    state: restarted

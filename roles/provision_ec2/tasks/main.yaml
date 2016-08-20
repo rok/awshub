@@ -1,5 +1,0 @@
----
-- include: key.yaml
-- include: vpc.yaml
-- include: sg.yaml
-- include: ec2.yaml

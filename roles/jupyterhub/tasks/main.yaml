@@ -1,6 +1,0 @@
----
-
-- include: packages.yaml
-- include: directories.yaml
-- include: config.yaml
-- include: supervisor.yaml

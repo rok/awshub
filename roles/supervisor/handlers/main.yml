@@ -1,7 +1,9 @@
 ---
 
 - name: restart supervisord
-  service: name=supervisor state=restarted
+  service:
+    name: supervisor
+    state: restarted
   become: yes
 
 - name: reread supervisord
