@@ -5,20 +5,24 @@
   environment:
     PATH: "/opt/conda/bin:{{ (ansible_env|default({})).PATH|default('') }}"
   conda:
-    name: {{item}}
+    name: "{{item}}"
     state: present
   with_items:
     - configurable-http-proxy
     - sqlalchemy
+  tags:
+    - jupyterhub
 
 - name: pip install jupyterhub
   become: true
   environment:
     PATH: "/opt/conda/bin:{{ (ansible_env|default({})).PATH|default('') }}"
   pip:
-    name: {{item}}
+    name: "{{item}}"
     state: present
     editable: false
   with_items:
     - jupyterhub==0.6
     - oauthenticator==0.3
+  tags:
+    - jupyterhub

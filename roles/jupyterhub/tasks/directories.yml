@@ -1,73 +1,85 @@
 ---
 
-- name: make sure /etc/jupyterhub exists
+- name: 'make sure /etc/jupyterhub exists'
   become: true
   file:
-    path: {{jupyterhub_config_dir}}/
-    state: {{item}}
+    path: "{{jupyterhub_config_dir}}/"
+    state: "{{item}}"
     owner: root
     group: root
     mode: 0755
   with_items:
     - directory
     - touch
+  tags:
+    - jupyterhub
 
-- name: make sure /srv/jupyterhub exists
+- name: 'make sure /srv/jupyterhub exists'
   become: true
   file:
-    path: {{jupyterhub_srv_dir}}/
-    state: {{item}}
+    path: "{{jupyterhub_srv_dir}}/"
+    state: "{{item}}"
     owner: root
     group: root
     mode: 0700
   with_items:
     - directory
     - touch
+  tags:
+    - jupyterhub
 
-- name: make sure /var/log/jupyterhub exists
+- name: 'make sure /var/log/jupyterhub exists'
   become: true
   file:
-    path: {{jupyterhub_log_dir}}/
-    state: {{item}}
+    path: "{{jupyterhub_log_dir}}/"
+    state: "{{item}}"
     owner: root
     group: root
     mode: 0755
   with_items:
     - directory
     - touch
+  tags:
+    - jupyterhub
 
-- name: make sure /etc/jupyter/templates exists
+- name: 'make sure /etc/jupyter/templates exists'
   become: true
   file:
-    path: {{jupyter_templates_dir}}/
-    state: {{item}}
+    path: "{{jupyter_templates_dir}}/"
+    state: "{{item}}"
     owner: root
     group: root
     mode: 0755
   with_items:
     - directory
     - touch
+  tags:
+    - jupyterhub
 
-- name: make sure /etc/jupyter exists
+- name: 'make sure /etc/jupyter exists'
   become: true
   file:
-    path: {{jupyter_config_dir}}
-    state: {{item}}
+    path: "{{jupyter_config_dir}}"
+    state: "{{item}}"
     owner: root
     group: root
     mode: 0755
   with_items:
     - directory
     - touch
+  tags:
+    - jupyterhub
 
-- name: make sure /etc/ipython exists
+- name: 'make sure /etc/ipython exists'
   become: true
   file:
-    path: {{ipython_config_dir}}
-    state: {{item}}
+    path: "{{ipython_config_dir}}"
+    state: "{{item}}"
     owner: root
     group: root
     mode: 0755
   with_items:
     - directory
     - touch
+  tags:
+    - jupyterhub

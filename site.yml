@@ -12,7 +12,9 @@
   post_tasks:
     - name: Refresh EC2 inventory
       shell: inventory/ec2.py --refresh-cache
+
     - meta: refresh_inventory
+
     - name: Create cookie_secret
       shell: openssl rand -hex 1024 > ./security/cookie_secret
 
@@ -25,12 +27,10 @@
     - "group_vars/all"
 
   pre_tasks:
-    - name: 'Install python'
-      apt:
-        pkg: python
-        state: present
+    - name: 'Install python in raw mode'
+      raw: sudo apt-get install -y python
 
-    - include_vars: "./userlist.yaml"
+    - include_vars: "./userlist.yml"
     - name: 'Add users to the server'
       user:
         name: "{{ item.username }}"
@@ -45,3 +45,4 @@
     - supervisor
     - jupyterhub
     - nginx
+

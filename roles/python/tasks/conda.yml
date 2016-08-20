@@ -11,6 +11,8 @@
     dest: "/tmp/{{conda_installer}}"
     checksum: "{{conda_checksum}}"
     mode: 0755
+  tags:
+    - python
 
 - name: miniconda is installed
   shell:
@@ -18,6 +20,8 @@
   args:
     creates: "{{ conda_prefix }}"
     executable: /bin/bash
+  tags:
+    - python
 
 # add conda to path in two places, so it's always registered
 - name: add conda to PATH
@@ -27,14 +31,20 @@
     state: present
     line: "export PATH={{conda_prefix}}/bin:$PATH"
     insertbefore: BOF
+  tags:
+    - python
 
 - name: add conda to login PATH
   # add it to profile, so it's for all login shells
   copy:
     dest: /etc/profile.d/conda.sh
     content: "export PATH={{conda_prefix}}/bin:$PATH"
+  tags:
+    - python
 
 - name: add conda config
   copy:
     content: "{{ conda_config | to_yaml }}"
-    dest: "{{ conda_prefix }}/.condarc" 
+    dest: "{{ conda_prefix }}/.condarc"
+  tags:
+    - python

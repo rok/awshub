@@ -5,6 +5,8 @@
   apt:
     pkg: nginx-full
     state: present
+  tags:
+    - nginx
 
 # ---------------------------------------------------
 # Install SSL cert/key using letsencrypt
@@ -13,12 +15,16 @@
 - fail:
     msg: "you must provide an email for usage with letsencrypt"
   when: use_letsencrypt and (letsencrypt_email == '' or letsencrypt_email is undefined)
+  tags:
+    - nginx
 
 - name: install letsencrypt
   become: true
   apt:
     pkg: letsencrypt
     state: present
+  tags:
+    - nginx
 
 - name: stop the nginx service
   become: true
@@ -27,11 +33,15 @@
     state: stopped
     enabled: yes
   when: use_letsencrypt
+  tags:
+    - nginx
 
 - name: verify presence of letsencrypt certificate
   stat:
     path: /etc/letsencrypt/live/{{ domain }}/cert.pem
   register: letsencrypt_cert
+  tags:
+    - nginx
 
 - name: run letsencrypt to generate SSL certs
   become: true
@@ -40,6 +50,8 @@
     chdir: /tmp
     creates: /etc/letsencrypt/live/{{ domain }}/
   when: use_letsencrypt and letsencrypt_cert.stat.exists == False
+  tags:
+    - nginx
 
 # ---------------------------------------------------
 # Or, install existing SSL cert/key
@@ -56,6 +68,8 @@
   with_items:
     - directory
     - touch
+  tags:
+    - nginx
 
 - name: install SSL key
   become: true
@@ -66,6 +80,8 @@
     group: root
     mode: 0600
   when: not use_letsencrypt
+  tags:
+    - nginx
 
 - name: install SSL certificate
   become: true
@@ -76,6 +92,8 @@
     group: root
     mode: 0600
   when: not use_letsencrypt
+  tags:
+    - nginx
 
 # ---------------------------------------------------
 # Configure and launch nginx
@@ -86,6 +104,8 @@
     PATH: "/opt/conda/bin:{{ (ansible_env|default({})).PATH|default('') }}"
   command: python3 -c 'import notebook; import os; print(os.path.join(notebook.__path__[0], "static"));'
   register: notebook_static_directory
+  tags:
+    - nginx
 
 - name: install nginx.conf
   become: true
@@ -98,6 +118,8 @@
     backup: yes
   notify:
     - reload nginx
+  tags:
+    - nginx
 
 - name: start the nginx service
   become: true
@@ -105,3 +127,5 @@
     name: nginx
     state: started
     enabled: yes
+  tags:
+    - nginx
