@@ -18,6 +18,12 @@
   tags:
     - nginx
 
+- name: debug use_letsencrypt
+  debug:
+    msg: "use_letsencrypt: {{ use_letsencrypt }}"
+  tags:
+    - nginx
+
 - name: install letsencrypt
   become: true
   apt:
