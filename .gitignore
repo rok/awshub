@@ -3,3 +3,11 @@ cookie_secret
 passwords
 userlist.html
 userlist.yaml
+.vagrant
+CA.cer
+CA.key
+CA.pem
+CA.srl
+ssl.crt
+ssl.csr
+ssl.key
