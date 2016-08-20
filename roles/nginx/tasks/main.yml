@@ -23,8 +23,10 @@
   apt:
     pkg: letsencrypt
     state: present
+  when: use_letsencrypt
   tags:
     - nginx
+    - letsencrypt
 
 - name: stop the nginx service
   become: true
@@ -35,13 +37,16 @@
   when: use_letsencrypt
   tags:
     - nginx
+    - letsencrypt
 
 - name: verify presence of letsencrypt certificate
   stat:
     path: /etc/letsencrypt/live/{{ domain }}/cert.pem
   register: letsencrypt_cert
+  when: use_letsencrypt
   tags:
     - nginx
+    - letsencrypt
 
 - name: run letsencrypt to generate SSL certs
   become: true
@@ -52,7 +57,7 @@
   when: use_letsencrypt and letsencrypt_cert.stat.exists == False
   tags:
     - nginx
-
+    - letsencrypt
 # ---------------------------------------------------
 # Or, install existing SSL cert/key
 # ---------------------------------------------------
