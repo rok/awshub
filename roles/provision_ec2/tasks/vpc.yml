@@ -13,3 +13,5 @@
             gw: igw
     region: "{{ region }}"
   register: vpc
+  tags:
+    - provision

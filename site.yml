@@ -1,0 +1,75 @@
+#!/usr/bin/env ansible-playbook
+---
+- name: Provision an EC2 instance
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  roles:
+    - provision_ec2
+    - userlist
+
+  post_tasks:
+    - name: Refresh EC2 inventory
+      shell: inventory/ec2.py --refresh-cache
+
+    - meta: refresh_inventory
+
+    - name: Create cookie_secret
+      shell: openssl rand -hex 1024 > ./security/cookie_secret
+
+- name: Install and configure jupyterhub on it.
+  hosts: "tag_Project_{{ project }}:&tag_Name_{{ project }}"
+  connection: ssh
+  become: yes
+  gather_facts: no
+  vars_files:
+    - "group_vars/all"
+
+  pre_tasks:
+    - name: 'Install python in raw mode'
+      raw: sudo apt-get install -y python
+
+    - include_vars: "./userlist.yml"
+    - name: 'Add users to the server'
+      user:
+        name: "{{ item.username }}"
+        password: "{{ item.pwd | password_hash('sha512') }}"
+      with_items: "{{ users }}"
+
+  roles:
+    - { role: cloudflare,
+        when: cloudflare_token is defined and cloudflare_email is defined }
+    - common
+    - python
+    - supervisor
+    - jupyterhub
+    - nginx
+
+- name: Install and configure jupyterhub on vagrant box.
+  hosts: vagrant
+  connection: ssh
+  become: yes
+  gather_facts: no
+  vars_files:
+    - "group_vars/all"
+
+  pre_tasks:
+    - name: 'Install python in raw mode'
+      raw: sudo apt-get install -y python
+
+    - include_vars: "./userlist.yml"
+    - name: 'Add users to the server'
+      user:
+        name: "{{ item.username }}"
+        password: "{{ item.pwd | password_hash('sha512') }}"
+      with_items: "{{ users }}"
+
+  roles:
+    - { role: cloudflare,
+        when: cloudflare_token is defined and cloudflare_email is defined }
+    - common
+    - python
+    - supervisor
+    - jupyterhub
+    - nginx

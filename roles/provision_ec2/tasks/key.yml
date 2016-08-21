@@ -5,3 +5,5 @@
     region: "{{ region }}"
     key_material: "{{ item }}"
   with_file: "{{ keyfile }}"
+  tags:
+    - provision

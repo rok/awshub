@@ -1,26 +1,42 @@
 ---
-- name: conda install ipython/jupyter deps
-  conda: name={{item}} state=present executable="{{conda_prefix}}/bin/conda"
+
+- name: 'conda install ipython/jupyter deps'
+  conda:
+    name: "{{item}}"
+    state: present
+    executable: "{{conda_prefix}}/bin/conda"
   become: yes
   with_items:
     - notebook==4.2
     - ipyparallel
     - ipykernel
     - nbconvert
+  tags:
+    - python
 
 - name: install pandoc
-  apt: pkg=pandoc state=present
+  apt:
+    pkg: pandoc
+    state: present
+  tags:
+    - python
 
 - name: pip install non-conda deps
-  pip: name={{item}} state=present
+  become: yes
   environment:
     PATH: "{{conda_prefix}}/bin:{{ (ansible_env|default({})).PATH|default('') }}"
-  become: yes
+  pip:
+    name: "{{item}}"
+    state: present
   with_items:
     - ipywidgets==5
+  tags:
+    - python
 
 - name: install python3 kernelspec
+  become: yes
   environment:
     PATH: "{{conda_prefix}}/bin:{{ (ansible_env|default({})).PATH|default('') }}"
   command: "python3 -m IPython kernel install"
-  become: yes
+  tags:
+    - python

@@ -1,0 +1,36 @@
+#!/usr/bin/env ansible-playbook
+- name: "create_cert.yml"
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+
+    - name: 'make sure directory for TLS certificates exists'
+      file:
+        name: security
+        state: directory
+        mode: 0700
+
+    - name: 'generate CA key'
+      command: "openssl genrsa -out security/CA.key 1024 creates=security/CA.key"
+
+    - name: 'self-sign CA key'
+      command: "openssl req -x509 -new -nodes -key security/CA.key -days 1024 -out security/CA.pem -subj '/C=NL/ST=NH/L=Amsterdam/O=localroot/CN=Self Signing CA' creates=security/CA.pem"
+
+    - name: 'convert pem to der for webserver'
+      command: "openssl x509 -in security/CA.pem -outform der -out security/CA.cer creates=security/CA.cer"
+
+    - name: 'generate ssl private key'
+      command: "openssl genrsa -out security/ssl.key 1024 creates=security/ssl.key"
+      tags:
+        - httpd
+
+    - name: 'generate certificate signing request'
+      command: "openssl req -new -key security/ssl.key -out security/ssl.csr -subj '/C=NL/ST=NH/L=Amsterdam/O=localhost/CN=hub'"
+      tags:
+        - httpd
+
+    - name: 'CA-sign key'
+      become: no
+      local_action: shell /bin/bash --login -c 'openssl x509 -req -in security/ssl.csr -CA security/CA.pem -CAkey security/CA.key -CAcreateserial -out security/ssl.crt -days 180'

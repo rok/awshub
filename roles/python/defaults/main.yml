@@ -1,3 +1,5 @@
+---
+
 miniconda_version: 4.0.5
 conda_installer: Miniconda3-{{ miniconda_version }}-Linux-x86_64.sh
 conda_checksum: "sha256:a7bcd0425d8b6688753946b59681572f63c2241aed77bf0ec6de4c5edc5ceeac"

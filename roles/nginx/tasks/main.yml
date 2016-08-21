@@ -1,0 +1,142 @@
+---
+
+- name: install system nginx
+  become: true
+  apt:
+    pkg: nginx-full
+    state: present
+  tags:
+    - nginx
+
+# ---------------------------------------------------
+# Install SSL cert/key using letsencrypt
+# ---------------------------------------------------
+
+- fail:
+    msg: "you must provide an email for usage with letsencrypt"
+  when: use_letsencrypt and (letsencrypt_email == '' or letsencrypt_email is undefined)
+  tags:
+    - nginx
+
+- name: debug use_letsencrypt
+  debug:
+    msg: "use_letsencrypt: {{ use_letsencrypt }}"
+  tags:
+    - nginx
+
+- name: install letsencrypt
+  become: true
+  apt:
+    pkg: letsencrypt
+    state: present
+  when: use_letsencrypt
+  tags:
+    - nginx
+    - letsencrypt
+
+- name: stop the nginx service
+  become: true
+  service:
+    name: nginx
+    state: stopped
+    enabled: yes
+  when: use_letsencrypt
+  tags:
+    - nginx
+    - letsencrypt
+
+- name: verify presence of letsencrypt certificate
+  stat:
+    path: /etc/letsencrypt/live/{{ domain }}/cert.pem
+  register: letsencrypt_cert
+  when: use_letsencrypt
+  tags:
+    - nginx
+    - letsencrypt
+
+- name: run letsencrypt to generate SSL certs
+  become: true
+  command: letsencrypt certonly --standalone --standalone-supported-challenges http-01 --agree-tos -m {{ letsencrypt_email }} -d {{ domain }}
+  args:
+    chdir: /tmp
+    creates: /etc/letsencrypt/live/{{ domain }}/
+  when: use_letsencrypt and letsencrypt_cert.stat.exists == False
+  tags:
+    - nginx
+    - letsencrypt
+# ---------------------------------------------------
+# Or, install existing SSL cert/key
+# ---------------------------------------------------
+
+- name: make sure /etc/nginx/ssl exists
+  become: true
+  file:
+    path: "{{ssl_path}}/"
+    state: "{{item}}"
+    owner: root
+    group: root
+    mode: 0700
+  with_items:
+    - directory
+    - touch
+  tags:
+    - nginx
+
+- name: install SSL key
+  become: true
+  copy:
+    src: '../../../security/ssl.key'
+    dest: "{{ssl_key_path}}"
+    owner: root
+    group: root
+    mode: 0600
+  when: not use_letsencrypt
+  tags:
+    - nginx
+
+- name: install SSL certificate
+  become: true
+  copy:
+    src: '../../../security/ssl.crt'
+    dest: "{{ssl_cert_path}}"
+    owner: root
+    group: root
+    mode: 0600
+  when: not use_letsencrypt
+  tags:
+    - nginx
+
+# ---------------------------------------------------
+# Configure and launch nginx
+# ---------------------------------------------------
+
+- name: find notebook static directory
+  environment:
+    PATH: "/opt/conda/bin:{{ (ansible_env|default({})).PATH|default('') }}"
+  command: python3 -c 'import notebook; import os; print(os.path.join(notebook.__path__[0], "static"));'
+  register: notebook_static_directory
+  tags:
+    - nginx
+
+- name: install nginx.conf
+  become: true
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  notify:
+    - reload nginx
+  tags:
+    - nginx
+
+- name: start the nginx service
+  become: true
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  tags:
+    - nginx

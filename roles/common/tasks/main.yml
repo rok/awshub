@@ -1,0 +1,48 @@
+---
+
+- name: update the apt index
+  become: yes
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+  tags:
+    - common
+
+- name: install aptitude
+  become: yes
+  apt:
+    pkg: aptitude
+    state: present
+  tags:
+    - common
+
+- name: Upgrade all packages
+  become: yes
+  apt:
+    upgrade: safe
+  tags:
+    - common
+
+- name: other developer tools
+  become: yes
+  apt:
+    pkg: "{{item}}"
+    state: present
+  with_items:
+    - gfortran
+    - git
+    - pandoc
+    - python-qt4
+  tags:
+    - common
+
+- name: install user applications
+  become: yes
+  apt:
+    pkg: "{{item}}"
+    state: present
+  with_items:
+    - vim
+    - htop
+  tags:
+   - common

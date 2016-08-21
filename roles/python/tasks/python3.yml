@@ -1,15 +1,23 @@
 ---
 
 - name: user conda packages
-  conda: name={{item}} state=present
+  conda:
+    name: "{{item}}"
+    state: present
   environment:
     PATH: "{{conda_prefix}}/bin:{{ (ansible_env|default({})).PATH|default('') }}"
   become: true
   with_items: "{{ conda_packages }}"
+  tags:
+    - python
 
 - name: user pip packages
-  pip: name={{item}} state=present
+  become: true
   environment:
     PATH: "{{conda_prefix}}/bin:{{ (ansible_env|default({})).PATH|default('') }}"
-  become: true
+  pip:
+    name: "{{item}}"
+    state: present
   with_items: "{{ pip_packages }}"
+  tags:
+    - python

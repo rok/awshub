@@ -24,7 +24,16 @@
       Project: "{{ project }}"
     wait: yes
   register: ec2
+  tags:
+    - provision
 
 - name: Wait for SSH to come up
-  wait_for: host={{ item.public_dns_name }} port=22 delay=20 timeout=320 state=started
+  wait_for:
+    host: "{{ item.public_dns_name }}"
+    port: 22
+    delay: 20
+    timeout: 320
+    state: started
   with_items: "{{ ec2.instances }}"
+  tags:
+    - provision

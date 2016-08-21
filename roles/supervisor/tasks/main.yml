@@ -1,0 +1,29 @@
+---
+
+- name: install apt supervisor package
+  become: true
+  apt:
+    pkg: supervisor
+    state: present
+  tags:
+    - supervisor
+
+- name: make sure supervisord is running
+  become: true
+  service:
+    name: supervisor
+    enabled: yes
+    state: started
+  tags:
+    - supervisor
+
+- name: run supervisord as root
+  become: true
+  lineinfile:
+    dest: /etc/supervisor/supervisord.conf
+    state: present
+    line: "user=root"
+    insertafter: '^\[supervisord\]'
+    backup: yes
+  tags:
+    - supervisor

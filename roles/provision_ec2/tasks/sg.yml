@@ -21,3 +21,5 @@
       - proto: all
         cidr_ip: "{{ vpc_cidr_block }}"
   register: vpc_sg
+  tags:
+    - provision
