@@ -2,7 +2,7 @@
 cookie_secret
 passwords
 userlist.html
-userlist.yaml
+userlist.yml
 .vagrant
 CA.cer
 CA.key
