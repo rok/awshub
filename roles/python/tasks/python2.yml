@@ -1,0 +1,21 @@
+---
+
+- name: python2 packages
+  apt:
+    pkg: "{{item}}"
+    state: present
+  become: true
+  with_items: "{{ apt_packages }}"
+  tags:
+    - python
+
+- name: user pip packages
+  become: true
+  pip:
+    name: ipykernel
+    state: present
+  tags:
+    - python
+
+- name: install python2 ipykernel
+  command: python2 -m ipykernel install

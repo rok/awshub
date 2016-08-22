@@ -16,6 +16,17 @@ conda_packages:
   - scikit-learn
   - pandas
   - seaborn
+
 pip_packages:
   - ipythonblocks
   - plotly
+
+apt_packages:
+  - libtool
+  - pkg-config
+  - build-essential
+  - autoconf
+  - automake
+  - libzmq-dev
+  - python-dev
+  - python-pip
