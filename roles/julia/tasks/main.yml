@@ -1,0 +1,74 @@
+---
+
+- name: install Julia release repo
+  become: yes
+  command: add-apt-repository ppa:staticfloat/juliareleases
+  tags:
+    -julia
+
+- name: install Julia deps repo
+  become: yes
+  command: add-apt-repository ppa:staticfloat/julia-deps
+  tags:
+    -julia
+
+- name: apt-get update
+  become: yes
+  apt:
+    update_cache: yes
+  tags:
+    -julia
+
+- name: install julia
+  become: yes
+  apt:
+    name: julia
+    state: present
+  tags:
+    -julia
+
+- name: create directory for packages
+  file:
+    path: /opt/global-packages/.julia/
+    state: directory
+    mode: 0755
+  tags:
+    - julia
+
+- name: initialize package
+  become: yes
+  environment:
+    JULIA_PKGDIR: /opt/global-packages/.julia/
+  command: julia -e 'Pkg.init()'
+  tags:
+    - julia
+
+- name: install IJulia
+  become: yes
+  environment:
+    JULIA_PKGDIR: /opt/global-packages/.julia/
+  command: julia -e 'Pkg.add("IJulia")'
+  tags:
+    - julia
+
+- name: ensure directory for jupyter kernels
+  file:
+    path: /usr/local/share/jupyter/kernels
+    state: directory
+    mode: 0755
+  tags:
+    - julia
+
+- name: install julia kernelspec
+  become: yes
+  shell: mv /root/.local/share/jupyter/kernels/* /usr/local/share/jupyter/kernels/
+
+- name: create preference file
+  become: yes
+  lineinfile:
+    dest: /usr/etc/julia/juliarc.jl
+    state: present
+    line: 'push!(LOAD_PATH, "/opt/global-packages/.julia/v0.4/")'
+  notify: restart jupyterhub
+  tags:
+    - julia

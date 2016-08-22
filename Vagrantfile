@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 
 VAGRANTFILE_API_VERSION = "2"
-$MEMSIZE=2048
+$MEMSIZE=4096
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
@@ -33,8 +33,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     hub_config.vm.box = "ubuntu14"
     hub_config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
     hub_config.vm.network "private_network", ip: "192.168.10.20", :netmask => "255.255.255.0",  auto_config: true
+    hub_config.vm.hostname = "hub"
     hub_config.vm.network "forwarded_port", id: 'ssh', guest: 22, host: 2224, auto_correct: true
-    hub_config.vm.network :forwarded_port, guest:443, host:8443
+    hub_config.vm.network :forwarded_port, guest:443, host:7443
     hub_config.vm.provider "vmware_fusion" do |vmware|
       vmware.vmx["memsize"] = "#$MEMSIZE"
       vmware.vmx["numvcpus"] = "2"

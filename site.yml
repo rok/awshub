@@ -45,6 +45,7 @@
     - supervisor
     - jupyterhub
     - r
+    - julia
     - nginx
 
 - name: Install and configure jupyterhub on vagrant box.
@@ -74,4 +75,5 @@
     - supervisor
     - jupyterhub
     - r
+    - julia
     - nginx

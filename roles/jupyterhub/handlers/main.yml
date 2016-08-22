@@ -1,0 +1,15 @@
+---
+
+- name: restart jupyterhub
+  supervisorctl:
+    name: jupyterhub
+    state: restarted
+  tags:
+    - jupyterhub
+
+- name: start jupyterhub
+  supervisorctl:
+    name: jupyterhub
+    state: started
+  tags:
+    - jupyterhub
