@@ -1,0 +1,17 @@
+---
+
+devtools_reqs:
+  - libcurl4-gnutls-dev
+  - libxml2-dev
+  - libssl-dev
+  - libzmq3-dev
+
+# See https://cran.rstudio.com/web/views/
+cran_packages:
+  - devtools
+  - crayon
+  - pbdZMQ
+  - shiny
+
+github_packages:
+  - daattali/shinyjs

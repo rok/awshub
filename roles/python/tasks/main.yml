@@ -3,3 +3,4 @@
 - include: conda.yml
 - include: jupyter.yml
 - include: python3.yml
+- include: python2.yml
