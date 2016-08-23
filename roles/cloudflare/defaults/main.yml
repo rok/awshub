@@ -1,5 +1,5 @@
 ---
 
-# cloudflare API key
-# cloudflare_token: CLOUDFLARE_API
-# cloudflare_email: CLOUDFLARE_API_EMAIL
+# Cloudflare API key
+cloudflare_email: rok.mihevc@gmail.com
+cloudflare_token: b1155037e88e3c14faca13c24d25f82f4ff6f

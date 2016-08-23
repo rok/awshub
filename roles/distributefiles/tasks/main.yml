@@ -1,0 +1,35 @@
+---
+
+- name: Load usernames into memory
+  include_vars: "../../userlist.yml"
+  tags:
+    - distributefiles
+
+- name: Copy desired files to the remote
+  copy:
+    src: "{{ item }}"
+    dest: /data/
+  with_fileglob:
+    - ../../files/*
+  tags:
+    - distributefiles
+
+- name: Copy files to all users
+  shell: cp -R /data/* /home/{{ item.username }}
+  with_items: "{{ users }}"
+  tags:
+    - distributefiles
+
+- name: Ensure files and folders are owned by the user
+  shell: >
+    find /home/{{ item.username }}/ -maxdepth 5 
+    -exec chown {{ item.username }}:{{ item.username }} {} \;
+  with_items: "{{ users }}"
+  tags:
+    - distributefiles
+
+- name: Ensure files and folders are 0766
+  shell: find /home/{{ item.username }}/ -maxdepth 5 -exec chmod 0766 {} \;
+  with_items: "{{ users }}"
+  tags:
+    - distributefiles

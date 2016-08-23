@@ -1,13 +1,13 @@
 ---
-- name: Create DNS record for the given server IP
+
+- name: Create DNS domain mapping to given IP
   cloudflare_dns:
     zone: "{{ domain }}"
-    record: "{{ item }}"
+    record: "{{ url }}"
     type: A
     value: "{{ ec2_ip_address }}"
     solo: yes
     account_email: "{{ cloudflare_email }}"
     account_api_token: "{{ cloudflare_token }}"
-  with_items:
-    - "{{ domain }}"
-    - "www"
+  tags:
+    - letsencrypt

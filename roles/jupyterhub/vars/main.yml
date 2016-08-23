@@ -36,8 +36,8 @@ ssl_key_path: "{{ssl_path}}/ssl.key"
 ssl_cert_path: "{{ssl_path}}/ssl.crt"
 
 # If letsencrypt is used to get SSL cert
-letsencrypt_ssl_key_path: "/etc/letsencrypt/live/{{ domain }}/privkey.pem"
-letsencrypt_ssl_cert_path: "/etc/letsencrypt/live/{{ domain }}/fullchain.pem"
+letsencrypt_ssl_key_path: "/etc/letsencrypt/live/{{ url }}/privkey.pem"
+letsencrypt_ssl_cert_path: "/etc/letsencrypt/live/{{ url }}/fullchain.pem"
 
 # ---------------------------------------------------
 # Nbgrader config

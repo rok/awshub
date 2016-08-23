@@ -7,6 +7,7 @@
     state: present
   tags:
     - nginx
+    - letsencrypt
 
 # ---------------------------------------------------
 # Install SSL cert/key using letsencrypt
@@ -23,6 +24,7 @@
     msg: "use_letsencrypt: {{ use_letsencrypt }}"
   tags:
     - nginx
+    - letsencrypt
 
 - name: install letsencrypt
   become: true
@@ -47,7 +49,7 @@
 
 - name: verify presence of letsencrypt certificate
   stat:
-    path: /etc/letsencrypt/live/{{ domain }}/cert.pem
+    path: "/etc/letsencrypt/live/{{ url }}/cert.pem"
   register: letsencrypt_cert
   when: use_letsencrypt
   tags:
@@ -56,14 +58,15 @@
 
 - name: run letsencrypt to generate SSL certs
   become: true
-  command: letsencrypt certonly --standalone --standalone-supported-challenges http-01 --agree-tos -m {{ letsencrypt_email }} -d {{ domain }}
+  command: "letsencrypt certonly --standalone --standalone-supported-challenges http-01 --agree-tos -m {{ letsencrypt_email }} -d {{ url }}"
   args:
     chdir: /tmp
-    creates: /etc/letsencrypt/live/{{ domain }}/
+    creates: "/etc/letsencrypt/live/{{ url }}/"
   when: use_letsencrypt and letsencrypt_cert.stat.exists == False
   tags:
     - nginx
     - letsencrypt
+
 # ---------------------------------------------------
 # Or, install existing SSL cert/key
 # ---------------------------------------------------
@@ -117,6 +120,7 @@
   register: notebook_static_directory
   tags:
     - nginx
+    - letsencrypt
 
 - name: install nginx.conf
   become: true
@@ -131,6 +135,7 @@
     - reload nginx
   tags:
     - nginx
+    - letsencrypt
 
 - name: start the nginx service
   become: true
@@ -140,3 +145,4 @@
     enabled: yes
   tags:
     - nginx
+    - letsencrypt
