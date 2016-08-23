@@ -1,0 +1,36 @@
+#!/usr/bin/env ansible-playbook
+- name: Install notebooks
+  hosts: all
+  become: yes
+  gather_facts: no
+
+  vars_files:
+    - "group_vars/all"
+
+  tasks:
+    - name: Copy desired files to the remote
+      become: yes
+      synchronize:
+        src: files/
+        dest: /data/
+
+    - name: Load usernames into memory
+      include_vars: "./userlist.yml"
+
+    - name: Copy files to all users
+      shell: cp -R /data/* /home/{{ item.username }}
+      with_items: "{{ users }}"
+      no_log: yes
+
+    - name: Ensure files and folders are owned by the user
+      shell: >
+        find /home/{{ item.username }}/ -maxdepth 5 
+        -exec chown {{ item.username }}:{{ item.username }} {} \;
+      with_items: "{{ users }}"
+      no_log: yes
+
+    - name: Ensure folders are 0755
+      shell: find /home/ -type d -maxdepth 5 -exec chmod 0755 {} \;
+
+    - name: Ensure files are 0644
+      shell: find /home/ -type f -maxdepth 5 -exec chmod 0644 {} \;

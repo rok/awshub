@@ -23,7 +23,7 @@
 
 - name: apt-get update
   become: yes
-  apt: 
+  apt:
     update_cache: yes
   tags:
     - r
@@ -75,13 +75,6 @@
 - name: install IRKernel in Jupyter
   become: yes
   command: R -e "IRkernel::installspec(user = FALSE)"
-  tags:
-    - r
-
-- name: restart jupyterhub with supervisor
-  become: yes
-  supervisorctl:
-    name: jupyterhub
-    state: restarted
+  notify: restart jupyterhub
   tags:
     - r

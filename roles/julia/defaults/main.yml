@@ -1,0 +1,4 @@
+---
+
+julia_file: julia-0.4.6-linux-x86_64.tar.gz
+julia_url: "https://julialang.s3.amazonaws.com/bin/linux/x64/0.4/{{ julia_file }}"

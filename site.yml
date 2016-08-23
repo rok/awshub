@@ -47,6 +47,7 @@
     - supervisor
     - jupyterhub
     - r
+    - julia
     - nginx
 
   tasks:
@@ -101,6 +102,7 @@
     - supervisor
     - jupyterhub
     - r
+    - julia
     - nginx
 
   tasks:
