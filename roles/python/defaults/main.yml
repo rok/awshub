@@ -39,3 +39,4 @@ python2_packages:
   - scikit-learn
   - pandas
   - seaborn
+  - statsmodels
