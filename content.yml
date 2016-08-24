@@ -13,13 +13,14 @@
       synchronize:
         src: files/
         dest: /data/
+        delete: yes
 
     - name: Load usernames into memory
       include_vars: "./userlist.yml"
 
     - name: Clean user folders
-      shell: sudo find /home/*/* -exec rm -Rf {} \;
-      no_log: yes
+      shell: find /home/*/* -maxdepth 0 -exec rm -Rf {} \;
+      ignore_errors: yes
 
     - name: Copy files to all users
       shell: cp -R /data/materials/* /home/{{ item.username }}
