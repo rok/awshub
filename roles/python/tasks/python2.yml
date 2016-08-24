@@ -2,7 +2,7 @@
 
 - name: python2 packages
   apt:
-    pkg: "{{item}}"
+    pkg: "{{ item }}"
     state: present
   become: true
   with_items: "{{ apt_packages }}"
@@ -12,8 +12,9 @@
 - name: user pip packages
   become: true
   pip:
-    name: ipykernel
+    name: "{{ item }}"
     state: present
+  with_items: "{{ python2_packages }}"
   tags:
     - python
 

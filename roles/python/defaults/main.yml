@@ -30,3 +30,12 @@ apt_packages:
   - libzmq-dev
   - python-dev
   - python-pip
+
+python2_packages:
+  - ipykernel
+  - numpy
+  - scipy
+  - matplotlib
+  - scikit-learn
+  - pandas
+  - seaborn

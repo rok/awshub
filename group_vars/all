@@ -15,8 +15,9 @@ instances_device_name: /dev/sda1
 use_letsencrypt: yes
 letsencrypt_email: rok@mihevc.org
 domain: youstar.org
-# To put the server on a different subdomain we can specify it here
-url: jupyter.{{ domain }}
+# To put the server on a subdomain specify it here e.g.:
+# url: jupyter.{{ domain }}
+url: "{{ domain }}"
 
 # The base directory of user accounts
 home_dir: /home
