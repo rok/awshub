@@ -62,6 +62,7 @@
 - name: install julia kernelspec
   become: yes
   shell: mv /root/.local/share/jupyter/kernels/* /usr/local/share/jupyter/kernels/
+  ignore_errors: True
 
 - name: create preference file
   become: yes
