@@ -16,6 +16,7 @@ conda_packages:
   - scikit-learn
   - pandas
   - seaborn
+  - basemap
 
 pip_packages:
   - ipythonblocks
@@ -30,6 +31,7 @@ apt_packages:
   - libzmq-dev
   - python-dev
   - python-pip
+  - python-mpltoolkits.basemap
 
 python2_packages:
   - ipykernel
