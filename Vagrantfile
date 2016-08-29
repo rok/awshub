@@ -30,8 +30,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: false
 
   config.vm.define :hub, autostart: true do |hub_config|
-    hub_config.vm.box = "ubuntu14"
-    hub_config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+    hub_config.vm.box = "bento/ubuntu-16.04"
     hub_config.vm.network "private_network", ip: "192.168.10.20", :netmask => "255.255.255.0",  auto_config: true
     hub_config.vm.hostname = "hub"
     hub_config.vm.network "forwarded_port", id: 'ssh', guest: 22, host: 2224, auto_correct: true

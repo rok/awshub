@@ -32,12 +32,14 @@
 
     - name: Load usernames into memory
       include_vars: "./userlist.yml"
+      no_log: yes
 
     - name: 'Add users to the server'
       user:
         name: "{{ item.username }}"
         password: "{{ item.pwd | password_hash('sha512') }}"
       with_items: "{{ users }}"
+      no_log: yes
 
   roles:
     - { role: cloudflare,
@@ -64,7 +66,7 @@
 
     - name: Ensure files and folders are owned by the user
       shell: >
-        find /home/{{ item.username }}/ -maxdepth 5 
+        find /home/{{ item.username }}/ -maxdepth 5
         -exec chown {{ item.username }}:{{ item.username }} {} \;
       with_items: "{{ users }}"
 
@@ -87,16 +89,16 @@
 
     - name: Load usernames into memory
       include_vars: "./userlist.yml"
-      
+      no_log: yes
+
     - name: 'Add users to the server'
       user:
         name: "{{ item.username }}"
         password: "{{ item.pwd | password_hash('sha512') }}"
+      no_log: yes
       with_items: "{{ users }}"
 
   roles:
-    - { role: cloudflare,
-        when: cloudflare_token is defined and cloudflare_email is defined }
     - common
     - python
     - supervisor

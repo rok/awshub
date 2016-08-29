@@ -28,6 +28,10 @@ apt_packages:
   - autoconf
   - automake
   - libzmq-dev
+  - libblas-dev
+  - liblapack-dev
+  - libatlas-base-dev
+  - gfortran
   - python-dev
   - python-pip
 
