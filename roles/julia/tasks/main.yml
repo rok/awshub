@@ -1,17 +1,5 @@
 ---
 
-- name: install Julia release repo
-  become: yes
-  command: add-apt-repository ppa:staticfloat/juliareleases
-  tags:
-    -julia
-
-- name: install Julia deps repo
-  become: yes
-  command: add-apt-repository ppa:staticfloat/julia-deps
-  tags:
-    -julia
-
 - name: apt-get update
   become: yes
   apt:
@@ -28,6 +16,7 @@
     -julia
 
 - name: create directory for packages
+  become: yes
   file:
     path: /opt/global-packages/.julia/
     state: directory
@@ -67,9 +56,10 @@
 - name: create preference file
   become: yes
   lineinfile:
-    dest: /usr/etc/julia/juliarc.jl
+    dest: /etc/julia/juliarc.jl
     state: present
     line: 'push!(LOAD_PATH, "/opt/global-packages/.julia/v0.4/")'
   notify: restart jupyterhub
   tags:
     - julia
+    - juliapref
