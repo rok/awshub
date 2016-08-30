@@ -27,7 +27,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # enable guest additions
-  config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: true
+  config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: false
 
   config.vm.define :hub, autostart: true do |hub_config|
 #    hub_config.vm.box = "bento/ubuntu-16.04"
