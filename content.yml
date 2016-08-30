@@ -1,6 +1,6 @@
 #!/usr/bin/env ansible-playbook
 - name: Install notebooks
-  hosts: all
+  hosts: hub
   become: yes
   gather_facts: no
 
@@ -12,7 +12,7 @@
       become: yes
       synchronize:
         src: files/
-        dest: /data/
+        dest: /data/materials
         delete: yes
 
     - name: Load usernames into memory
@@ -25,14 +25,14 @@
     - name: Copy files to all users
       shell: cp -R /data/materials/* /home/{{ item.username }}
       with_items: "{{ users }}"
-      no_log: yes
+      no_log: no
 
     - name: Ensure files and folders are owned by the user
       shell: >
-        find /home/{{ item.username }}/ -maxdepth 10 
+        find /home/{{ item.username }}/ -maxdepth 10
         -exec chown {{ item.username }}:{{ item.username }} {} \;
       with_items: "{{ users }}"
-      no_log: yes
+      no_log: no
 
     - name: Ensure folders are 0755
       shell: find /home/ -type d -maxdepth 10 -exec chmod 0755 {} \;
