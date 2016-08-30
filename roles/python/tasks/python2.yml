@@ -18,3 +18,5 @@
 
 - name: install python2 ipykernel
   command: python2 -m ipykernel install
+  tags:
+    - python

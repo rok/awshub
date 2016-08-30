@@ -27,6 +27,8 @@ apt_packages:
   - build-essential
   - autoconf
   - automake
+  - libfreetype6-dev
+  - libpng12-dev
   - libzmq-dev
   - libblas-dev
   - liblapack-dev
