@@ -16,6 +16,7 @@ conda_packages:
   - scikit-learn
   - pandas
   - seaborn
+  - basemap
 
 pip_packages:
   - ipythonblocks
@@ -36,6 +37,7 @@ apt_packages:
   - gfortran
   - python-dev
   - python-pip
+  - python-mpltoolkits.basemap
 
 python2_packages:
   - ipykernel
