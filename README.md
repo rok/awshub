@@ -15,7 +15,6 @@ To spin up a jupyterhub node on vagrant:
 - git clone git@github.com:rok/awshub.git && cd awshub
 - git clone git@github.com:UDST/ansible-conda.git ./ansible-conda
 - Run:
-		vagrant up --no-provision
-		./vagrant.yml
+		vagrant up --no-provision && ./vagrant.yml
 - browse on host-only network: https://192.168.10.20/
 - The jupyterhub is accessible to others on your local network on forwarded port 7443
