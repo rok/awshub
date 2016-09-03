@@ -28,6 +28,7 @@
     -julia
 
 - name: create directory for packages
+  become: yes
   file:
     path: /opt/global-packages/.julia/
     state: directory
@@ -63,6 +64,8 @@
   become: yes
   shell: mv /root/.local/share/jupyter/kernels/* /usr/local/share/jupyter/kernels/
   ignore_errors: True
+  tags:
+    - julia
 
 - name: create preference file
   become: yes
@@ -73,3 +76,4 @@
   notify: restart jupyterhub
   tags:
     - julia
+    - juliapref

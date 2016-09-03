@@ -28,7 +28,13 @@ apt_packages:
   - build-essential
   - autoconf
   - automake
+  - libfreetype6-dev
+  - libpng12-dev
   - libzmq-dev
+  - libblas-dev
+  - liblapack-dev
+  - libatlas-base-dev
+  - gfortran
   - python-dev
   - python-pip
   - python-mpltoolkits.basemap

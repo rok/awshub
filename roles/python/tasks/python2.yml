@@ -11,9 +11,7 @@
 
 - name: user pip packages
   become: true
-  pip:
-    name: "{{ item }}"
-    state: present
+  command: /usr/bin/pip2 install "{{ item }}"
   with_items: "{{ python2_packages }}"
   tags:
     - python

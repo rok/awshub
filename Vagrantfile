@@ -20,7 +20,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Use the Ansible playbook provision.yml to setup the virtual machines.
   config.vm.provision "ansible" do |ansible|
     ansible.inventory_path = "inventory/vagrant.ini"
-    ansible.playbook = "site.yml"
+    ansible.playbook = "vagrant.yml"
     ansible.skip_tags = "letsencrypt"
     ansible.verbose = "vv"
     ansible.host_key_checking = "false"
@@ -30,6 +30,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: false
 
   config.vm.define :hub, autostart: true do |hub_config|
+#    hub_config.vm.box = "bento/ubuntu-16.04"
     hub_config.vm.box = "ubuntu14"
     hub_config.vm.box_url = "https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
     hub_config.vm.network "private_network", ip: "192.168.10.20", :netmask => "255.255.255.0",  auto_config: true
