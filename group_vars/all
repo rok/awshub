@@ -2,11 +2,12 @@
 project: jupyterhub
 region: eu-west-1
 keyfile: ~/.ssh/id_rsa.pub
+ansible_pkg_mgr: apt
 
 # EC2
 image: ami-0ae77879 # ubuntu trusty 16.04 (ami-26e70c49 @ eu-central-1)
 instances_count: 1 # count per one subnet
-instances_type: m4.4xlarge # t2.micro
+instances_type: t2.micro # m4.4xlarge # t2.micro
 ansible_processor_count: 16
 instances_data_size: 100
 instances_device_name: /dev/sda1

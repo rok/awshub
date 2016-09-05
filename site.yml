@@ -33,6 +33,7 @@
     - name: Load usernames into memory
       include_vars: "./userlist.yml"
       no_log: yes
+      tags: addusers
 
     - name: 'Add users to the server'
       user:
@@ -40,36 +41,36 @@
         password: "{{ item.pwd | password_hash('sha512') }}"
       with_items: "{{ users }}"
       no_log: yes
+      tags: addusers
 
   roles:
-    - { role: cloudflare,
-        when: cloudflare_token is defined and cloudflare_email is defined }
+    - role: cloudflare
+      when: cloudflare_token is defined and cloudflare_email is defined
+      tags: restart
+
+    - role: antoiner77.caddy
+      caddy_config: |
+        {{ domain }} {
+          proxy / localhost:8000 {
+            header_upstream Host {host}
+            header_upstream X-Real-IP {remote}
+            header_upstream X-Forwarded-Proto {scheme}
+            websocket
+          }
+        }
+      tags: caddy
+
     - common
     - python
     - supervisor
-    - jupyterhub
     - r
     - julia
-    - nginx
+    - jupyterhub
 
   tasks:
-    - name: Copy desired files to the remote
-      copy:
-        src: "{{ item }}"
-        dest: /data/
-      with_fileglob:
-        - files/*
-
-    - name: Copy files to all users
-      shell: cp -R /data/* /home/{{ item.username }}
-      with_items: "{{ users }}"
-
-    - name: Ensure files and folders are owned by the user
-      shell: >
-        find /home/{{ item.username }}/ -maxdepth 5
-        -exec chown {{ item.username }}:{{ item.username }} {} \;
-      with_items: "{{ users }}"
-
-    - name: Ensure files and folders are 0766
-      shell: find /home/{{ item.username }}/ -maxdepth 5 -exec chmod 0766 {} \;
-      with_items: "{{ users }}"
+    - name: restart jupyterhub
+      supervisorctl:
+        name: jupyterhub
+        state: restarted
+      tags:
+        - restart
