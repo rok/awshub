@@ -22,7 +22,7 @@
     state: present
     editable: false
   with_items:
-    - jupyterhub==0.6
+    - jupyterhub==0.6.1
     - oauthenticator==0.3
   tags:
     - jupyterhub
